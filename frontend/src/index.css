@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink-950: #0a0d0b;
+  --color-ink-950: #000000;
   --color-ink-900: #101512;
   --color-ink-800: #171d19;
   --color-ink-700: #232b26;
@@ -16,6 +16,7 @@
   --color-mist-500: #6f7b74;
 
   --color-alert-500: #b4534a;
+  --color-alert-400: #d9857c;
 }
 
 body {
