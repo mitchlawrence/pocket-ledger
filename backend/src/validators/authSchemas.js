@@ -1,11 +1,5 @@
 import { z } from "zod";
-
-// Sanitizing: remove hidden control characters, squeeze repeated spaces, trim.
-const cleanText = (value) =>
-  value
-    .replace(/[\u0000-\u001F\u007F]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
+import { cleanText } from "./common.js";
 
 const name = z
   .string()

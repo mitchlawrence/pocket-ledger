@@ -5,6 +5,9 @@ import { pool } from "./config/db.js";
 import { apiLimiter } from "./middleware/rateLimiters.js";
 import authRoutes from "./routes/auth.js";
 import accountRoutes from "./routes/account.js";
+import { requireAuth } from "./middleware/requireAuth.js";
+import categoryRoutes from "./routes/categories.js";
+import transactionRoutes from "./routes/transactions.js";
 
 const app = express();
 
@@ -25,6 +28,8 @@ app.get("/api/health", async (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/account", accountRoutes);
+app.use("/api/categories", requireAuth, categoryRoutes);
+app.use("/api/transactions", requireAuth, transactionRoutes);
 
 app.use("/api", (req, res) => {
   res.status(404).json({ error: "Not found" });

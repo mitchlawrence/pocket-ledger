@@ -11,6 +11,7 @@ import {
   rotateSession,
   revokeSession,
 } from "../services/sessionService.js";
+import { seedDefaultCategories } from "../services/categoryService.js";
 import {
   REFRESH_COOKIE_NAME,
   setRefreshCookie,
@@ -48,6 +49,7 @@ router.post(
       throw err;
     }
 
+    await seedDefaultCategories(user.id);
     const refreshToken = await createSession(user.id);
     setRefreshCookie(res, refreshToken);
     res.status(201).json({ user, accessToken: signAccessToken(user.id) });
