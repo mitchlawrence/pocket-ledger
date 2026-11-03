@@ -41,6 +41,48 @@ function buildFilters(userId, q) {
   return { where: conditions.join(" AND "), params };
 }
 
+router.get("/summary", async (req, res) => {
+  const [summary, expenseCategories, recent] = await Promise.all([
+    pool.query(
+      `SELECT count(*)::int AS total,
+              COALESCE(SUM(t.amount) FILTER (WHERE c.type = 'income'), 0) AS income,
+              COALESCE(SUM(t.amount) FILTER (WHERE c.type = 'expense'), 0) AS expense
+         FROM transactions t
+         JOIN categories c ON c.id = t.category_id
+        WHERE t.user_id = $1`,
+      [req.userId],
+    ),
+    pool.query(
+      `SELECT c.id, c.name, SUM(t.amount) AS amount
+         FROM transactions t
+         JOIN categories c ON c.id = t.category_id
+        WHERE t.user_id = $1 AND c.type = 'expense'
+        GROUP BY c.id, c.name
+        ORDER BY amount DESC, lower(c.name)
+        LIMIT 6`,
+      [req.userId],
+    ),
+    pool.query(
+      `SELECT t.id, t.amount, t.note, t.occurred_on AS date,
+              t.category_id, c.name AS category_name, c.type
+         FROM transactions t
+         JOIN categories c ON c.id = t.category_id
+        WHERE t.user_id = $1
+        ORDER BY t.occurred_on DESC, t.created_at DESC, t.id
+        LIMIT 5`,
+      [req.userId],
+    ),
+  ]);
+
+  const { total, income, expense } = summary.rows[0];
+  res.json({
+    total,
+    totals: { income, expense },
+    expenseCategories: expenseCategories.rows,
+    recent: recent.rows.map(toTransaction),
+  });
+});
+
 router.get("/", validate(listQuerySchema, "query"), async (req, res) => {
   const q = req.valid.query;
   const { where, params } = buildFilters(req.userId, q);

@@ -9,8 +9,10 @@ const links = [
 ];
 
 function linkClass({ isActive }) {
-  return `rounded-md px-3 py-1.5 text-sm transition-colors ${
-    isActive ? "bg-ink-700 text-mist-100" : "text-mist-300 hover:text-mist-100"
+  return `rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+    isActive
+      ? "bg-leaf-600 text-white shadow-sm"
+      : "text-mist-300 hover:bg-ink-800 hover:text-leaf-600"
   }`;
 }
 
@@ -19,7 +21,7 @@ export default function AppLayout() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-ink-700 bg-ink-900">
+      <header className="border-b border-ink-700 bg-white shadow-sm">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-4 px-4 py-3">
           <div className="flex items-center gap-6">
             <span className="text-sm font-semibold uppercase tracking-wide text-leaf-400">
