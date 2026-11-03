@@ -5,6 +5,8 @@ import AppLayout from "./components/AppLayout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import Transactions from "./pages/Transactions";
+import Categories from "./pages/Categories";
 import Account from "./pages/Account";
 
 export default function App() {
@@ -37,6 +39,8 @@ export default function App() {
             }
           >
             <Route path="/" element={<Dashboard />} />
+            <Route path="/transactions" element={<Transactions />} />
+            <Route path="/categories" element={<Categories />} />
             <Route path="/account" element={<Account />} />
           </Route>
 

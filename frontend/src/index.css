@@ -35,3 +35,9 @@ body {
     "Helvetica Neue",
     sans-serif;
 }
+
+input,
+select,
+textarea {
+  color-scheme: dark;
+}
