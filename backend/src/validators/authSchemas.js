@@ -44,3 +44,9 @@ export const loginSchema = z
     password: z.string().min(1, "Password is required").max(128),
   })
   .strict();
+
+export const deleteAccountSchema = z
+  .object({
+    password: z.string().min(1, "Password is required").max(128),
+  })
+  .strict();

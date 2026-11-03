@@ -75,3 +75,15 @@ export async function rotateSession(oldToken) {
     client.release();
   }
 }
+
+export async function revokeSession(token) {
+  await pool.query(
+    `UPDATE refresh_tokens
+        SET revoked_at = now()
+      WHERE revoked_at IS NULL
+        AND family_id = (
+          SELECT family_id FROM refresh_tokens WHERE token_hash = $1
+        )`,
+    [hashToken(token)],
+  );
+}

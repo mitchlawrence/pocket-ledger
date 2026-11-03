@@ -3,3 +3,8 @@ node_modules/
 dist/
 *.log
 .DS_Store
+
+# Files created by curl tests
+cookies*.txt
+*cookies.txt
+session*.txt

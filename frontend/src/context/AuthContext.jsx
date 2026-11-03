@@ -11,6 +11,7 @@ const AuthContext = createContext(null);
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     setSessionExpiredHandler(() => setUser(null));
 
@@ -48,8 +49,26 @@ export function AuthProvider({ children }) {
     setUser(data.user);
   }
 
+  async function logout() {
+    try {
+      await api("/auth/logout", { method: "POST" });
+    } catch {
+      // Even if the server can't be reached, we still log out locally.
+    }
+    setAccessToken(null);
+    setUser(null);
+  }
+
+  async function deleteAccount(password) {
+    await api("/account", { method: "DELETE", body: { password } });
+    setAccessToken(null);
+    setUser(null);
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, signup, login }}>
+    <AuthContext.Provider
+      value={{ user, loading, signup, login, logout, deleteAccount }}
+    >
       {children}
     </AuthContext.Provider>
   );

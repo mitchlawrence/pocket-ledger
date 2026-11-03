@@ -6,7 +6,11 @@ import { requireAuth } from "../middleware/requireAuth.js";
 import { authLimiter } from "../middleware/rateLimiters.js";
 import { signupSchema, loginSchema } from "../validators/authSchemas.js";
 import { signAccessToken } from "../utils/tokens.js";
-import { createSession, rotateSession } from "../services/sessionService.js";
+import {
+  createSession,
+  rotateSession,
+  revokeSession,
+} from "../services/sessionService.js";
 import {
   REFRESH_COOKIE_NAME,
   setRefreshCookie,
@@ -92,6 +96,15 @@ router.post("/refresh", async (req, res) => {
 
   setRefreshCookie(res, result.refreshToken);
   res.json({ accessToken: signAccessToken(result.userId) });
+});
+
+router.post("/logout", async (req, res) => {
+  const token = req.cookies[REFRESH_COOKIE_NAME];
+  if (token) {
+    await revokeSession(token);
+  }
+  clearRefreshCookie(res);
+  res.status(204).end();
 });
 
 router.get("/me", requireAuth, async (req, res) => {

@@ -1,9 +1,11 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import { ProtectedRoute, GuestRoute } from "./components/RouteGuards";
+import AppLayout from "./components/AppLayout";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
+import Account from "./pages/Account";
 
 export default function App() {
   return (
@@ -26,14 +28,18 @@ export default function App() {
               </GuestRoute>
             }
           />
+
           <Route
-            path="/"
             element={
               <ProtectedRoute>
-                <Dashboard />
+                <AppLayout />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/account" element={<Account />} />
+          </Route>
+
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>

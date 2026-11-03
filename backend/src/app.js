@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import { pool } from "./config/db.js";
 import { apiLimiter } from "./middleware/rateLimiters.js";
 import authRoutes from "./routes/auth.js";
+import accountRoutes from "./routes/account.js";
 
 const app = express();
 
@@ -23,6 +24,7 @@ app.get("/api/health", async (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/account", accountRoutes);
 
 app.use("/api", (req, res) => {
   res.status(404).json({ error: "Not found" });
