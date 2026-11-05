@@ -1,5 +1,5 @@
 import { Router } from "express";
-import argon2 from "argon2";
+import bcrypt from "bcrypt";
 import { pool } from "../config/db.js";
 import { requireAuth } from "../middleware/requireAuth.js";
 import { validate } from "../middleware/validate.js";
@@ -25,7 +25,7 @@ router.delete(
       return res.status(401).json({ error: "Account not found" });
     }
 
-    const passwordOk = await argon2.verify(
+    const passwordOk = await bcrypt.compare(
       user.password_hash,
       req.body.password,
     );

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import argon2 from "argon2";
+import bcrypt from "bcrypt";
 import { pool } from "../config/db.js";
 import { validate } from "../middleware/validate.js";
 import { requireAuth } from "../middleware/requireAuth.js";
@@ -20,7 +20,7 @@ import {
 
 const router = Router();
 
-const DUMMY_HASH = await argon2.hash("not-a-real-password");
+const DUMMY_HASH = await bcrypt.hash("not-a-real-password", 12);
 
 router.post(
   "/signup",
@@ -28,7 +28,7 @@ router.post(
   validate(signupSchema),
   async (req, res) => {
     const { name, email, password } = req.body;
-    const passwordHash = await argon2.hash(password);
+    const passwordHash = await bcrypt.hash(password, 12);
 
     let user;
     try {
@@ -65,7 +65,7 @@ router.post("/login", authLimiter, validate(loginSchema), async (req, res) => {
   );
   const user = rows[0];
 
-  const passwordOk = await argon2.verify(
+  const passwordOk = await bcrypt.compare(
     user ? user.password_hash : DUMMY_HASH,
     password,
   );
